@@ -30,8 +30,25 @@ def pick(paragraphs, select, k):
     ''
     """
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    temp = [paragraphs[i] for i in range(len(paragraphs)) if select(paragraphs[i])]
+    return temp[k] if 0 <= k < len(temp) else ''
     # END PROBLEM 1
+def isLetter(letter):
+    return True if ('a' <= letter <= 'z') or ('A' <= letter <= 'Z') else False
+def splitwords(words):
+    rem = []
+    for index,letter in enumerate(words):
+        if not (isLetter(letter)) :
+            rem.append(index)
+    rem.append(len(words))
+    ans = []
+    ans.append(words[0 : rem[0]])
+    for i,num in enumerate(rem):
+        if i+1 < len(rem):
+            ans.append(words[rem[i]:rem[i+1]])
+    return [i for i in ans if i]
+
+
 
 
 def about(topic):
@@ -49,7 +66,15 @@ def about(topic):
     """
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    def select1(sentence ):
+        topicc = topic.copy()
+        words = sentence.split()
+        words = [lower(x) for x in words]
+        for i in topicc:
+            if i in words:
+                return True
+        return False
+    return select1
     # END PROBLEM 2
 
 
@@ -355,3 +380,9 @@ def run(*args):
     args = parser.parse_args()
     if args.t:
         run_typing_test(args.topic)
+
+if __name__ == "__main__":
+    ps = ['short', 'really long', 'tiny']
+    s = lambda p: len(p) <= 5
+    dogs = about(['dogs', 'hounds'])
+    print(dogs('A paragragh about dogs'))
