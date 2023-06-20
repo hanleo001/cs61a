@@ -32,7 +32,10 @@ def product(n, term):
     162
     """
     "*** YOUR CODE HERE ***"
-
+    ans = 1
+    for i in range(1, n+1):
+        ans *= term(i)
+    return ans
 
 def accumulate(merger, start, n, term):
     """Return the result of merging the first n terms in a sequence and start.
@@ -59,7 +62,9 @@ def accumulate(merger, start, n, term):
     16
     """
     "*** YOUR CODE HERE ***"
-
+    for i in range(n):
+        start = merger(start, term(i+1))
+    return start
 
 def summation_using_accumulate(n, term):
     """Returns the sum: term(0) + ... + term(n), using accumulate.
@@ -75,7 +80,7 @@ def summation_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(summation_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    "*** YOUR CODE HERE ***"
+    return accumulate(lambda x,y:x+y, term(0), n, term)
 
 
 def product_using_accumulate(n, term):
@@ -92,8 +97,7 @@ def product_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(product_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    "*** YOUR CODE HERE ***"
-
+    return accumulate(lambda x, y:x*y, 1, n, term)
 
 def filtered_accumulate(merger, start, cond, n, term):
     """Return the result of merging the terms in a sequence of N terms
@@ -119,7 +123,10 @@ def filtered_accumulate(merger, start, cond, n, term):
     True
     """
     def merge_if(x, y):
-        "*** YOUR CODE HERE ***"
+        if cond(y):
+            return merger(x, y)
+        else:
+            return x
     return accumulate(merge_if, start, n, term)
 
 
@@ -153,4 +160,19 @@ def funception(func_a, start):
     >>> func_b5 = funception(func_a, -1)
     >>> func_b5(4)    # Returns None since start < 0
     """
-    "*** YOUR CODE HERE ***"
+    error = False
+    def funb(stop):
+        if start < 0:
+           error = True
+           return
+        elif start > stop:
+            return func_a(start)
+        else:
+            ans = 1
+            for i in range(start, stop):
+                ans *= func_a(i)
+            return ans
+    return funb
+if __name__ == "__main__":
+
+    print(filtered_accumulate(add, 0, odd, 5, identity))
